@@ -1,0 +1,51 @@
+Some features are not used in our approach :
+1. language (great bias with a good amount of "en")
+2. shared_url_count (same for the same author, so diversified for different authors)
+3. shared_url_domain
+
+We use the following models:
+1. author_data(single author) -> engagement, with LGBM/LR (Done)
+2. author_data(every author) -> engagement, with LGBM/LR (Done) #TODO Need to re-upload
+3. train (with V1~V1024, average engagement for each author) -> engagement, PCA then LGBM/LR (Done)
+
+engagements obtained with these results + nb_followers + mean engagement -> final engagement, with LGBM/LR/DL (Done)
+
+
+Upload description:
+
+Constant output:
+The best constant estimated with author_data.
+
+final_opt:
+A convex optimization of all these results. (We get the result by analysing locally (only on user's historical data), globally (trained on whole historical data/whole data with V1~V1024) then passed to a final decision model. Finally, we take the mix of all  of them).
+
+final_lgbm:
+We get the result by analysing locally (only on user's historical data), globally (trained on whole historical data/whole data with V1~V1024) then passed to a final decision model. We use the LGBMRegressor with (num_leaves=10, max_depth=5, learning_rate=0.07) for the training part.
+
+final_lr:
+We get the result by analysing locally (only on user's historical data), globally (trained on whole historical data/whole data with V1~V1024) then passed to a final decision model. We use LinearRegression for the training part.
+
+final_mlp:
+We get the result by analysing locally (only on user's historical data), globally (trained on whole historical data/whole data with V1~V1024) then passed to a final decision model. We use the deep learning layers with (8, 8, 1) for the training part.
+
+lgbm_all_author:
+We learn a more global behavior of each post using the whole author_data. We use the LGBMRegressor with (num_leaves=16, max_depth=4, learning_rate=0.07) for the training part.
+
+lr_all_author:
+We learn a more global behavior of each post using the whole author_data. We use LinearRegression for the training part.
+
+
+lgbm_all_train:
+We learn on train dataset with timestamp, followers, shared_url_count, is_reply, V8, V258, V266, V456, V479, V582, V632, V687, V716 and V915. We use the LGBMRegressor with (num_leaves=8, max_depth=3, learning_rate=0.07) for the training part.
+
+
+lr_all_train:
+We learn on train dataset with timestamp, followers, shared_url_count, is_reply, V8, V258, V266, V456, V479, V582, V632, V687, V716 and V915. We use LinearRegression for the training part.
+
+
+single_author_lgbm:
+For each author, we use his historical data in order to predict the engagment of his new post. We use the LGBMRegressor with (num_leaves=8, max_depth=3, learning_rate=0.07) for the training part.
+
+
+single_author_lr:
+For each author, we use his historical data in order to predict the engagment of his new post. We use LinearRegression for the training part.
